@@ -1,12 +1,10 @@
 import { useState, useEffect } from 'react';
 import { setupWalletSelector } from '@near-wallet-selector/core';
 import { setupMyNearWallet } from '@near-wallet-selector/my-near-wallet';
-import { setupModal } from '@near-wallet-selector/modal-ui';
 import { providers, utils } from 'near-api-js';
 
 interface WalletState {
   selector: any;
-  modal: any;
   accounts: any[];
   accountId: string | null;
   balance: string;
@@ -17,7 +15,6 @@ interface WalletState {
 export const useNearWallet = () => {
   const [walletState, setWalletState] = useState<WalletState>({
     selector: null,
-    modal: null,
     accounts: [],
     accountId: null,
     balance: '0',
@@ -31,40 +28,30 @@ export const useNearWallet = () => {
 
   const initializeWallet = async () => {
     try {
-      console.log('Initializing NEAR wallet...');
+      console.log('Initializing wallet selector...');
       
-      // Initialize wallet selector with proper configuration
+      // Initialize wallet selector with minimal configuration
       const selector = await setupWalletSelector({
         network: 'testnet',
-        modules: [
-          setupMyNearWallet(),
-        ],
+        modules: [setupMyNearWallet()],
       });
 
       console.log('Wallet selector initialized');
 
-      // Setup modal for wallet selection
-      const modal = setupModal(selector, {
-        contractId: 'guest-book.testnet',
-      });
-
-      console.log('Modal setup complete');
-
-      // Update state with initialized components
+      // Update state with initialized selector
       setWalletState(prev => ({
         ...prev,
         selector,
-        modal,
         isLoading: false,
       }));
 
-      // Check if wallet is already connected
+      // Check if already connected
       const state = selector.store.getState();
-      console.log('Current wallet state:', state);
+      console.log('Wallet state:', state);
       
       if (state.accounts && state.accounts.length > 0) {
         const accountId = state.accounts[0].accountId;
-        console.log('Found connected account:', accountId);
+        console.log('Already connected:', accountId);
         
         const balance = await getAccountBalance(accountId);
         
@@ -134,43 +121,36 @@ export const useNearWallet = () => {
   };
 
   const connectWallet = async () => {
-    console.log('Connect wallet clicked');
+    console.log('Starting sign in process...');
     
-    if (!walletState.modal) {
-      console.error('Modal not initialized');
+    if (!walletState.selector) {
+      console.error('Selector not initialized');
       return;
     }
 
     try {
-      console.log('Showing wallet modal...');
-      
-      // Force modal to be visible
-      const modalElement = document.querySelector('.near-wallet-selector-modal');
-      if (modalElement) {
-        (modalElement as HTMLElement).style.zIndex = '999999';
-        (modalElement as HTMLElement).style.display = 'flex';
-      }
-      
-      walletState.modal.show();
-      
-      // Additional check to ensure modal is visible
-      setTimeout(() => {
-        const overlay = document.querySelector('.near-wallet-selector-modal-overlay, .modal-overlay');
-        if (overlay) {
-          (overlay as HTMLElement).style.zIndex = '999999';
-          (overlay as HTMLElement).style.display = 'flex';
-          console.log('Modal overlay forced to be visible');
-        }
-        
-        const body = document.querySelector('.near-wallet-selector-modal-body, .modal-body');
-        if (body) {
-          (body as HTMLElement).style.zIndex = '999999';
-          console.log('Modal body forced to be visible');
-        }
-      }, 100);
-      
+      // Get MyNEAR wallet directly
+      const wallet = await walletState.selector.wallet('my-near-wallet');
+      console.log('Got wallet, initiating sign in...');
+
+      // Direct sign in (will redirect to MyNEAR Wallet)
+      await wallet.signIn({
+        contractId: 'guest-book.testnet', // temporary contract for testing
+        methodNames: [], // optional methods
+        successUrl: window.location.origin,
+        failureUrl: window.location.origin,
+      });
+
     } catch (error) {
-      console.error('Failed to show wallet modal:', error);
+      console.error('Sign in error:', error);
+      
+      // Fallback: Direct redirect to MyNEAR Wallet
+      console.log('Attempting fallback redirect...');
+      const redirectUrl = encodeURIComponent(window.location.origin);
+      const walletUrl = `https://testnet.mynearwallet.com/login/?title=AgentSphere&success_url=${redirectUrl}&failure_url=${redirectUrl}`;
+      
+      console.log('Redirecting to:', walletUrl);
+      window.location.href = walletUrl;
     }
   };
 
@@ -221,9 +201,18 @@ export const useNearWallet = () => {
   };
 
   return {
-    ...walletState,
+    selector: walletState.selector,
+    accounts: walletState.accounts,
+    accountId: walletState.accountId,
+    balance: walletState.balance,
+    isConnected: walletState.isConnected,
+    isLoading: walletState.isLoading,
     connectWallet,
     disconnectWallet,
     refreshBalance,
+    // Legacy aliases for compatibility
+    signIn: connectWallet,
+    signOut: disconnectWallet,
+    isSignedIn: walletState.isConnected,
   };
 };

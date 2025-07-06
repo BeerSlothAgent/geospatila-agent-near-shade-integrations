@@ -28,7 +28,7 @@ const LandingPage = () => {
   
   // Use real NEAR wallet hook
   const { 
-    isConnected: isWalletConnected, 
+    isConnected: isWalletConnected,
     accountId, 
     balance, 
     isLoading: walletLoading,
@@ -119,7 +119,7 @@ const LandingPage = () => {
               
               {walletLoading ? (
                 <div className="bg-gray-500/20 text-gray-400 px-4 py-2 rounded-lg border border-gray-500/30">
-                  <span className="text-sm font-medium">Loading...</span>
+                  <span className="text-sm font-medium">Initializing wallet...</span>
                 </div>
               ) : !isWalletConnected ? (
                 <button 
@@ -271,14 +271,58 @@ const LandingPage = () => {
             {/* Testnet Notice */}
             {!isWalletConnected && !walletLoading && (
               <div className="mt-8 p-4 bg-yellow-500/20 border border-yellow-500/30 rounded-lg inline-block">
-                <p className="text-yellow-400 text-sm">
-                  🚰 Need testnet NEAR? Get free tokens at{' '}
-                  <a href="https://near-faucet.io" target="_blank" className="underline hover:text-yellow-300">
-                    near-faucet.io
-                  </a>
+                <div className="text-yellow-400 text-sm space-y-2">
+                  <p>
+                    🚰 Need testnet NEAR? Get free tokens at{' '}
+                    <a href="https://near-faucet.io" target="_blank" className="underline hover:text-yellow-300">
+                      near-faucet.io
+                    </a>
+                  </p>
+                  <p>
+                    🔗 Clicking "Connect Wallet" will redirect you to MyNEAR Wallet
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Connection Success Notice */}
+            {isWalletConnected && (
+              <div className="mt-8 p-4 bg-green-500/20 border border-green-500/30 rounded-lg inline-block">
+                <p className="text-green-400 text-sm">
+                  ✅ Successfully connected to {accountId} with {balance} NEAR
                 </p>
               </div>
             )}
+          </div>
+
+          {/* Connection Instructions */}
+          {!isWalletConnected && !walletLoading && (
+            <div className="mt-12 max-w-2xl mx-auto">
+              <h3 className="text-xl font-semibold text-white mb-4 text-center">How to Connect:</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                <div className="bg-gray-800/30 p-4 rounded-lg border border-gray-700">
+                  <div className="text-blue-400 font-medium mb-2">1. Click Connect</div>
+                  <div className="text-gray-300">Click the "Connect NEAR Wallet" button above</div>
+                </div>
+                <div className="bg-gray-800/30 p-4 rounded-lg border border-gray-700">
+                  <div className="text-blue-400 font-medium mb-2">2. Sign In</div>
+                  <div className="text-gray-300">You'll be redirected to MyNEAR Wallet to sign in</div>
+                </div>
+                <div className="bg-gray-800/30 p-4 rounded-lg border border-gray-700">
+                  <div className="text-blue-400 font-medium mb-2">3. Authorize</div>
+                  <div className="text-gray-300">Approve the connection and return to AgentSphere</div>
+                </div>
+              </div>
+              <div className="mt-4 text-center">
+                <p className="text-gray-400 text-sm">
+                  Don't have a NEAR testnet account?{' '}
+                  <a href="https://near-faucet.io" target="_blank" className="underline hover:text-yellow-300">
+                    Create one here
+                  </a>
+                </p>
+              </div>
+            </div>
+          )}
           </div>
 
           {/* Stats */}
