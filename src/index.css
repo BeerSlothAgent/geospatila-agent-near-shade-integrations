@@ -1,0 +1,160 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* NEAR Wallet Selector Modal Styles */
+@import "@near-wallet-selector/modal-ui/styles.css";
+
+/* Additional modal styles for better appearance */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  max-width: 400px;
+  width: 90%;
+}
+
+/* NEAR Wallet Selector Modal Styles */
+.near-wallet-selector-modal {
+  z-index: 9999;
+}
+
+.near-wallet-selector-modal .modal-overlay {
+  background-color: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(4px);
+}
+
+.near-wallet-selector-modal .modal-body {
+  background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+  border: 1px solid #374151;
+  border-radius: 12px;
+}
+
+.near-wallet-selector-modal .wallet-option {
+  background: rgba(55, 65, 81, 0.5);
+  border: 1px solid #4b5563;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.near-wallet-selector-modal .wallet-option:hover {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: #3b82f6;
+  transform: translateY(-1px);
+}
+/* NEAR Wallet Selector Modal Styles */
+.near-wallet-selector-modal {
+  z-index: 9999;
+}
+
+.near-wallet-selector-modal .modal-overlay {
+  background-color: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(4px);
+}
+
+.near-wallet-selector-modal .modal-body {
+  background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+  border: 1px solid #374151;
+  border-radius: 12px;
+}
+
+.near-wallet-selector-modal .wallet-option {
+  background: rgba(55, 65, 81, 0.5);
+  border: 1px solid #4b5563;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.near-wallet-selector-modal .wallet-option:hover {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: #3b82f6;
+  transform: translateY(-1px);
+}
+
+/* Force modal to be visible above all other elements */
+.near-wallet-selector-modal,
+.near-wallet-selector-modal-overlay,
+[data-testid="near-wallet-selector-modal"] {
+  z-index: 999999 !important;
+  position: fixed !important;
+}
+
+.near-wallet-selector-modal .modal-overlay,
+.near-wallet-selector-modal-overlay {
+  background-color: rgba(0, 0, 0, 0.9) !important;
+  backdrop-filter: blur(8px) !important;
+  z-index: 999999 !important;
+}
+
+.near-wallet-selector-modal .modal-body,
+.near-wallet-selector-modal-body {
+  background: linear-gradient(135deg, #1f2937 0%, #111827 100%) !important;
+  border: 2px solid #3b82f6 !important;
+  border-radius: 16px !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8) !important;
+  z-index: 999999 !important;
+  max-width: 400px !important;
+  width: 90% !important;
+  margin: auto !important;
+}
+
+.near-wallet-selector-modal .wallet-option,
+.near-wallet-selector-modal-wallet-option {
+  background: rgba(55, 65, 81, 0.8) !important;
+  border: 1px solid #6b7280 !important;
+  border-radius: 12px !important;
+  transition: all 0.2s ease !important;
+  margin: 8px 0 !important;
+  padding: 16px !important;
+}
+
+.near-wallet-selector-modal .wallet-option:hover,
+.near-wallet-selector-modal-wallet-option:hover {
+  background: rgba(59, 130, 246, 0.2) !important;
+  border-color: #3b82f6 !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important;
+}
+
+/* Hide wallet extension conflicts */
+.xdefi-provider-overlay,
+.metamask-provider-overlay,
+.unstoppable-provider-overlay {
+  display: none !important;
+}
+
+/* Ensure modal content is readable */
+.near-wallet-selector-modal h2,
+.near-wallet-selector-modal h3,
+.near-wallet-selector-modal p,
+.near-wallet-selector-modal span {
+  color: white !important;
+}
+
+.near-wallet-selector-modal button {
+  background: #3b82f6 !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 8px !important;
+  padding: 12px 24px !important;
+  font-weight: 600 !important;
+  transition: all 0.2s ease !important;
+}
+
+.near-wallet-selector-modal button:hover {
+  background: #2563eb !important;
+  transform: translateY(-1px) !important;
+}
