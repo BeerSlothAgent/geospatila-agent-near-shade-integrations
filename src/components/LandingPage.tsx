@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNearWallet } from '../hooks/useNearWallet';
+import AgentDeployment from './AgentDeployment';
 import { 
   Bot, 
   Wallet, 
@@ -25,6 +26,7 @@ const LandingPage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeFeature, setActiveFeature] = useState(0);
   const [scrollY, setScrollY] = useState(0);
+  const [isDeploymentOpen, setIsDeploymentOpen] = useState(false);
   
   // Use real NEAR wallet hook
   const { 
@@ -251,7 +253,10 @@ const LandingPage = () => {
                   <span>Connect NEAR Wallet</span>
                 </button>
               ) : (
-                <button className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:from-green-600 hover:to-emerald-700 transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center space-x-2">
+                <button 
+                  onClick={() => setIsDeploymentOpen(true)}
+                  className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:from-green-600 hover:to-emerald-700 transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center space-x-2"
+                >
                   <Bot className="w-5 h-5" />
                   <span>Deploy Your First Agent</span>
                   <ArrowRight className="w-5 h-5" />
@@ -554,7 +559,10 @@ const LandingPage = () => {
                 </a>
               </>
             ) : (
-              <button className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:from-green-600 hover:to-emerald-700 transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center space-x-2">
+              <button 
+                onClick={() => setIsDeploymentOpen(true)}
+                className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:from-green-600 hover:to-emerald-700 transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center space-x-2"
+              >
                 <Bot className="w-5 h-5" />
                 <span>Deploy Your First Agent</span>
                 <ArrowRight className="w-5 h-5" />
@@ -630,6 +638,12 @@ const LandingPage = () => {
           <ChevronDown className="w-5 h-5 transform rotate-180" />
         </button>
       )}
+
+      {/* Agent Deployment Modal */}
+      <AgentDeployment 
+        isOpen={isDeploymentOpen} 
+        onClose={() => setIsDeploymentOpen(false)} 
+      />
     </div>
   );
 };
