@@ -6,6 +6,7 @@ import { providers, utils } from 'near-api-js';
 
 interface WalletState {
   selector: any;
+  modal: any;
   accounts: any[];
   accountId: string | null;
   balance: string;
@@ -16,6 +17,7 @@ interface WalletState {
 export const useNearWallet = () => {
   const [walletState, setWalletState] = useState<WalletState>({
     selector: null,
+    modal: null,
     accounts: [],
     accountId: null,
     balance: '0',
@@ -36,16 +38,19 @@ export const useNearWallet = () => {
         network: 'testnet',
         modules: [
           setupMyNearWallet(),
-          setupModal({ contractId: 'guest-book.testnet' })
         ],
       });
 
       console.log('Wallet selector initialized');
 
+      // Initialize modal separately
+      const modal = setupModal(selector, { contractId: 'guest-book.testnet' });
+
       // Update state with initialized selector
       setWalletState(prev => ({
         ...prev,
         selector,
+        modal,
         isLoading: false,
       }));
 
@@ -134,7 +139,7 @@ export const useNearWallet = () => {
 
     try {
       // Use modal UI to handle wallet selection and connection
-      walletState.selector.show();
+      walletState.modal.show();
 
     } catch (error) {
       console.error('Sign in error:', error);
