@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { setupWalletSelector } from '@near-wallet-selector/core';
 import { setupMyNearWallet } from '@near-wallet-selector/my-near-wallet';
+import { setupModal } from '@near-wallet-selector/modal-ui';
 import { providers, utils } from 'near-api-js';
 
 interface WalletState {
@@ -33,7 +34,10 @@ export const useNearWallet = () => {
       // Initialize wallet selector with minimal configuration
       const selector = await setupWalletSelector({
         network: 'testnet',
-        modules: [setupMyNearWallet()],
+        modules: [
+          setupMyNearWallet(),
+          setupModal({ contractId: 'guest-book.testnet' })
+        ],
       });
 
       console.log('Wallet selector initialized');
@@ -129,28 +133,11 @@ export const useNearWallet = () => {
     }
 
     try {
-      // Get MyNEAR wallet directly
-      const wallet = await walletState.selector.wallet('my-near-wallet');
-      console.log('Got wallet, initiating sign in...');
-
-      // Direct sign in (will redirect to MyNEAR Wallet)
-      await wallet.signIn({
-        contractId: 'guest-book.testnet', // temporary contract for testing
-        methodNames: [], // optional methods
-        successUrl: window.location.origin,
-        failureUrl: window.location.origin,
-      });
+      // Use modal UI to handle wallet selection and connection
+      walletState.selector.show();
 
     } catch (error) {
       console.error('Sign in error:', error);
-      
-      // Fallback: Direct redirect to MyNEAR Wallet
-      console.log('Attempting fallback redirect...');
-      const redirectUrl = encodeURIComponent(window.location.origin);
-      const walletUrl = `https://testnet.mynearwallet.com/login/?title=AgentSphere&success_url=${redirectUrl}&failure_url=${redirectUrl}`;
-      
-      console.log('Redirecting to:', walletUrl);
-      window.location.href = walletUrl;
     }
   };
 
